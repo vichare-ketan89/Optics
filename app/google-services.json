@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "65984671719",
+    "project_id": "optics-bd024"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65984671719:android:716508c4ba4e230c",
+        "android_client_info": {
+          "package_name": "com.keto.optics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65984671719-os7re68186ffb690qc2gvnhnng1uc5ed.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.keto.optics",
+            "certificate_hash": "67A76C45205A6DEE202DBC24A90B9982E17D5DB5"
+          }
+        },
+        {
+          "client_id": "65984671719-e0v6offnjhda8bls5au0eatg899vkvb6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAk8SEedLenXeDVwnZ0QtTjF5Z_-7qrg3w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
