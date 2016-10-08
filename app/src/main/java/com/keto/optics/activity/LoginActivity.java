@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 if(signInAccount != null) {
                     Log.d(className, signInAccount.getDisplayName());
                     Log.d(className, signInAccount.getEmail());
-                    Log.d(className, signInAccount.getIdToken());
+                    Log.d(className, signInAccount.getPhotoUrl().toString());
                     openDashboard(signInAccount);
                 }
             }
@@ -102,6 +102,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Bundle bundle = new Bundle();
         bundle.putParcelable(SIGN_IN_DATA_KEY, account);
         intent.putExtra(ACCOUNT_BUNDLE_KEY, bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 }

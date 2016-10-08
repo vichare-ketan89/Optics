@@ -1,6 +1,7 @@
 package com.keto.optics.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -15,8 +16,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.keto.optics.R;
+import com.keto.optics.utils.DownloadImageTask;
 
 public class DashboardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,14 +56,18 @@ public class DashboardActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        initViews();
+        View navHeaderView = navigationView.getHeaderView(0);
+
+        initViews(navHeaderView);
         getData();
     }
 
-    private void initViews(){
-        userNameTextView = (TextView) findViewById(R.id.user_full_name_text_view);
-        userEmailIdTextView  = (TextView) findViewById(R.id.user_email_id_text_view);
-        userProfileImageView = (ImageView) findViewById(R.id.user_profile_imageView);
+    private void initViews(View navigationHeaderView){
+
+        //View navigationHeaderView = getLayoutInflater().inflate(R.layout.nav_header_dashboard,null);
+        userNameTextView = (TextView) navigationHeaderView.findViewById(R.id.user_full_name_text_view);
+        userEmailIdTextView  = (TextView) navigationHeaderView.findViewById(R.id.user_email_id_text_view);
+        userProfileImageView = (ImageView) navigationHeaderView.findViewById(R.id.user_profile_imageView);
     }
 
     private void getData(){
@@ -66,6 +77,11 @@ public class DashboardActivity extends AppCompatActivity
             GoogleSignInAccount account = (GoogleSignInAccount) accountBundle.get(LoginActivity.SIGN_IN_DATA_KEY);
 
             if(account != null){
+                userNameTextView.setText(account.getDisplayName());
+                userEmailIdTextView.setText(account.getEmail());
+                if(account.getPhotoUrl() != null) {
+                    new DownloadImageTask(userProfileImageView).execute(account.getPhotoUrl().toString());
+                }
 
             }
         }
@@ -121,10 +137,36 @@ public class DashboardActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        } else if (id == R.id.nav_signout) {
+            signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void signOut(){
+
+        GoogleSignInOptions mSignInOptions = new GoogleSignInOptions.Builder()
+                .requestIdToken(getString(R.string.client_id))
+                .build();
+
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, mSignInOptions)
+                .build();
+
+        mGoogleApiClient.connect();
+
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                if(status != null){
+                    if(status.isSuccess()){
+                        finish();
+                    }
+                }
+            }
+        });
     }
 }
