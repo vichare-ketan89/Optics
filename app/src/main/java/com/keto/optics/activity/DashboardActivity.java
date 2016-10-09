@@ -31,6 +31,7 @@ import com.google.android.gms.common.api.Status;
 import com.keto.optics.R;
 import com.keto.optics.utils.DownloadImageTask;
 import com.keto.optics.utils.ExcelUtils;
+import com.keto.optics.utils.NetworkUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +52,7 @@ public class DashboardActivity extends AppCompatActivity
     ImageView userProfileImageView;
     GoogleSignInOptions mSignInOptions;
     GoogleApiClient mGoogleApiClient;
+    Snackbar mSnackbar;
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -67,6 +69,7 @@ public class DashboardActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+/*
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,6 +77,8 @@ public class DashboardActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+*/
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -86,10 +91,12 @@ public class DashboardActivity extends AppCompatActivity
 
         View navHeaderView = navigationView.getHeaderView(0);
 
+        mSnackbar = Snackbar.make(fab, "Network not available", Snackbar.LENGTH_INDEFINITE);
+        NetworkUtils.initNetworkUtils(this);
         initViews(navHeaderView);
         getData();
-
         verifyStoragePermissions(this);
+
     }
 
     private void initViews(View navigationHeaderView){
@@ -192,16 +199,19 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     private void signOut(){
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                if(status != null){
-                    if(status.isSuccess()){
-                        finish();
-                    }
+        if(NetworkUtils.isNetworkAvailable()) {
+            mSnackbar.dismiss();
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+                @Override
+                public void onResult(@NonNull Status status) {
+                        if (status.isSuccess()) {
+                            finish();
+                        }
                 }
-            }
-        });
+            });
+        }else{
+            mSnackbar.show();
+        }
     }
 
     private void generateExcelFile(){
@@ -235,7 +245,7 @@ public class DashboardActivity extends AppCompatActivity
      *
      * @param activity
      */
-    public static void verifyStoragePermissions(Activity activity) {
+    public void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
 

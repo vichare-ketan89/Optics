@@ -3,6 +3,7 @@ package com.keto.optics.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.keto.optics.R;
+import com.keto.optics.utils.NetworkUtils;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener{
@@ -33,6 +35,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        NetworkUtils.initNetworkUtils(getApplicationContext());
         initGoogleAPI();
         initViews();
     }
@@ -61,9 +64,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onClick(View view) {
+        Snackbar snackbar = Snackbar.make(view,"Network not available.",Snackbar.LENGTH_INDEFINITE);
+
         switch (view.getId()){
             case R.id.sign_in_button :{
-                signIn();
+
+                if(NetworkUtils.isNetworkAvailable()){
+                    snackbar.dismiss();
+                    signIn();
+                }else{
+                    snackbar.show();
+                }
                 break;
             }
 
