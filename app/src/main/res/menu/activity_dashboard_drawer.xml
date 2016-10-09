@@ -11,9 +11,9 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="Gallery" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_generate_excel"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="Generate Excel" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
