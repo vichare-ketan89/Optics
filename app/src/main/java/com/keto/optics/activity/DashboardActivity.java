@@ -29,6 +29,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.keto.optics.R;
+import com.keto.optics.database.OpticsSQLiteWrapper;
 import com.keto.optics.utils.DownloadImageTask;
 import com.keto.optics.utils.ExcelUtils;
 import com.keto.optics.utils.NetworkUtils;
@@ -259,4 +260,8 @@ public class DashboardActivity extends AppCompatActivity
         }
     }
 
+    private void databaseTest(){
+        OpticsSQLiteWrapper opticsSQLiteWrapper = new OpticsSQLiteWrapper(this);
+        opticsSQLiteWrapper.getRecordsForModel("");
+    }
 }
